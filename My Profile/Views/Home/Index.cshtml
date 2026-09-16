@@ -1,0 +1,628 @@
+﻿@{
+    ViewData["Title"] = "Portfolio - Quang Lùn";
+}
+
+<style>
+    /* Bảng màu và CSS dùng riêng cho trang này */
+    :root {
+        --bg-main: #0d1117;       /* Nền xanh đen sâu */
+        --card-bg: #161b22;       /* Nền thẻ nhạt hơn chút */
+        --card-border: #30363d;   /* Viền thẻ mỏng */
+        --text-main: #f0f6fc;
+        --text-muted: #8b949e;
+        --accent-color: #58a6ff;  /* Xanh dương làm điểm nhấn */
+        --gradient-bar: linear-gradient(90deg, #3fb950 0%, #2ea043 50%, #58a6ff 100%);
+    }
+    /* Hiệu ứng trượt mượt và cách lề */
+    html {
+        scroll-behavior: smooth !important; /* Lệnh này giúp trượt từ từ (smooth) */
+        scroll-padding-top: 80px; /* Khúc này cực quan trọng: Báo cho web biết phải dừng lại cách đỉnh 80px để nhường chỗ cho Navbar */
+    }
+
+    body {
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        color: #f0f6fc !important;
+        padding-top: 70px; /* Đẩy toàn bộ trang xuống 70px để cái Avatar to đùng ở trang chủ không bị Navbar đè lên */
+    }
+    
+    /* Ép màu chữ trắng sáng cho toàn trang */
+    body, .container, h1, h2, h3, h4, h5, h6, p, span {
+        color: #f0f6fc !important;
+    }
+    
+    /* "Độ" lại class text-muted của Bootstrap cho nó thành màu xám sáng (đọc được trên nền đen) */
+    .text-muted {
+        color: #8b949e !important; 
+    }
+
+    /* Viền của mấy cái thẻ (Card) cũng cho nó sáng lên 1 chút xíu */
+    .b-card {
+        border-color: #30363d !important;
+    }
+
+    /* Định dạng chung cho các Thẻ (Card) */
+    .b-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        padding: 24px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .b-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 2rem;
+        color: var(--text-main);
+    }
+
+    /* Các nút bấm */
+    .btn-gradient {
+        background: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 24px;
+        font-weight: 600;
+    }
+    .btn-outline-custom {
+        background: transparent;
+        border: 1px solid var(--card-border);
+        color: var(--text-main);
+        border-radius: 8px;
+        padding: 10px 24px;
+    }
+
+    /* Chỉnh thanh Progress Bar */
+    .custom-progress {
+        height: 6px;
+        background-color: #21262d;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 8px;
+    }
+    .custom-progress-bar {
+        height: 100%;
+        background: var(--gradient-bar);
+        border-radius: 10px;
+    }
+
+    /* Nút chấm xanh Online */
+    .status-dot {
+        width: 8px; height: 8px;
+        background-color: #3fb950;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 8px #3fb950;
+    }
+</style>
+
+<div class="container py-5">
+
+    <!-- ==========================================
+         PHẦN 1: HOME (HERO SECTION)
+    =========================================== -->
+    <section id="home" class="min-vh-100 d-flex align-items-center pt-5">
+        <div class="row w-100 align-items-center g-5">
+            <!-- Cột trái: Thông tin -->
+            <div class="col-lg-6">    
+                <h2 class="text-muted fw-normal mb-1">Halo</h2>
+                <h1 class="display-3 fw-bold mb-3">
+                    Mình là <span style="color: #a8c0ff;">Nguyễn Đăng Quang</span>
+                </h1>
+                
+                <h3 class="fw-normal text-muted mb-4" style="line-height: 1.5;">
+                    Dở dở hâm hâm
+                </h3>
+                
+                <p class="text-muted mb-5" style="max-width: 80%;">
+                    Một sinh vật hướng nội nhưng chả hiểu hợp cạ cái nó thành hướng ngoại
+                    Vứt nó ra đường 1 mình thì 100% là Muted
+                </p>
+
+                <div class="d-flex gap-3 mb-5">
+                    <button class="btn btn-gradient">Khám phá mình ↓</button>
+                </div>
+
+                <div class="d-flex gap-4 text-muted" style="font-size: 0.9rem;">
+                    <span><i class="bi bi-geo-alt"></i> Hà Nội, Việt Nam</span>
+                    <span><i class="bi bi-code-slash"></i> Student</span>
+                </div>
+            </div>
+
+          <!-- Cột phải: Khung ảnh Avatar -->
+            <div class="col-lg-6">
+                <!-- Đã nới chiều cao từ 500px lên 580px để hàng dưới có chỗ thở -->
+                <div class="b-card p-0 d-flex flex-column" style="height: 580px; border-radius: 24px; overflow: hidden;">
+        
+                    <!-- Phần Giữa chứa ảnh (Giữ nguyên vì bạn đang ưng form này) -->
+                    <div class="flex-grow-1 p-3" style="overflow: hidden;">
+                        <img src="~/img/avt.jpg" alt="Avatar" 
+                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                    </div>
+        
+                    <!-- Phần Bottom (Bây giờ sẽ hiện ra đầy đủ và xịn xò) -->
+                    <div class="p-4 border-top d-flex justify-content-between align-items-center flex-shrink-0" style="border-color: var(--card-border)!important; background-color: var(--card-bg);">
+                        <span class="text-success fw-bold" style="font-size: 14px;">Câu nói phổ biến</span>
+                        <h2 class="text-muted m-0 fw-bold" style="font-size: 1.8rem;">Hả</h2>
+                    </div>
+        
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <br><br><br><br>
+
+    <!-- ==========================================
+         PHẦN 2: GIỚI THIỆU (ABOUT) - BẢN ĐƠN GIẢN HÓA
+    =========================================== -->
+    <section id="about" class="pt-5" style="min-height: 70vh;">
+        <h2 class="section-title">Mình là ai?</h2>
+        <div class="row g-4 align-items-stretch">
+            
+            <!-- Thẻ to bên trái: Vẫn giữ nguyên câu trích dẫn -->
+            <div class="col-lg-5">
+                <div class="b-card h-100 d-flex flex-column justify-content-between p-4">
+                    <div>
+                        <h3 class="fw-bold mb-4">Nhìn hiền khô à :P</h3>
+                        <p class="text-muted mb-4" style="line-height: 1.8; font-size: 1.05rem;">
+                            Thích tạo ra 1 cái gì đó giúp ích cho chính bản thân và mọi người, đó là lí do mình chọn nghành này. Ehe
+                        </p>
+                    </div>
+                    <blockquote class="border-start border-3 ps-3 mb-0 mt-4" style="border-color: var(--accent-color)!important;">
+                        <em class="text-muted">"Chất phác thật thà"</em>
+                    </blockquote>
+                </div>
+            </div>
+            
+            <!-- Thẻ bên phải: GỘP LẠI THÀNH 1 THẺ DUY NHẤT -->
+            <div class="col-lg-7">
+                <div class="b-card h-100 p-5 d-flex flex-column justify-content-center">
+                    <div class="row g-5">
+                        
+                        <!-- Cột 1 -->
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <span class="text-muted small fw-bold d-block mb-1"><i class="bi bi-person-vcard me-2"></i>BIỆT DANH</span>
+                                <h5 class="fw-bold m-0">Quang Lùn</h5>
+                            </div>
+                            <div class="mb-4">
+                                <span class="text-muted small fw-bold d-block mb-1"><i class="bi bi-geo-alt me-2"></i>ĐANG SỐNG</span>
+                                <h5 class="fw-bold m-0">Hà Đông, Hà Nội</h5>
+                            </div>
+                            <div class="mb-0">
+                                <span class="text-muted small fw-bold d-block mb-1"><i class="bi bi-mortarboard me-2"></i>NGÀNH HỌC</span>
+                                <h5 class="fw-bold m-0">Phát triển phần mềm | Công nghệ thông tin</h5>
+                            </div>
+                        </div>
+
+                        <!-- Cột 2 -->
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <span class="text-muted small fw-bold d-block mb-1"><i class="bi bi-calendar3 me-2"></i>NGÀY SINH</span>
+                                <h5 class="fw-bold m-0">30/04/2006 (20 tuổi)</h5>
+                            </div>
+                            <div class="mb-4">
+                                <span class="text-muted small fw-bold d-block mb-1"><i class="bi bi-building me-2"></i>TRƯỜNG</span>
+                                <h5 class="fw-bold m-0">Đại học Đại Nam</h5>
+                            </div>
+                            <div class="mb-0">
+                                <span class="text-muted small fw-bold d-block mb-1"><i class="bi bi-briefcase me-2"></i>CÔNG VIỆC</span>
+                                <h5 class="fw-bold m-0">Sinh viên</h5>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==========================================
+         PHẦN 3: TÍNH CÁCH 
+    =========================================== -->
+    <section id="personality" class="pt-5">
+        <h2 class="section-title">Tính cách của mình</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            <div class="col">
+                <div class="b-card h-100">
+                    <i class="bi bi-stars fs-4 text-info mb-3 d-block"></i>
+                    <h5 class="fw-bold">Vui vẻ</h5>
+                    <p class="text-muted small m-0">Luôn cố gắng mang năng lượng tích cực vào những cuộc gặp.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="b-card h-100">
+                    <i class="bi bi-emoji-smile fs-4 text-warning mb-3 d-block"></i>
+                    <h5 class="fw-bold">Hài hước</h5>
+                    <p class="text-muted small m-0">Đôi khi câu joke dở lại là câu được nhớ lâu nhất.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="b-card h-100">
+                    <i class="bi bi-people fs-4 text-success mb-3 d-block"></i>
+                    <h5 class="fw-bold">Hòa đồng</h5>
+                    <p class="text-muted small m-0">Dễ bắt chuyện, thích làm việc cùng người khác.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="b-card h-100">
+                    <i class="bi bi-shield-check fs-4 text-primary mb-3 d-block"></i>
+                    <h5 class="fw-bold">Trung thực</h5>
+                    <p class="text-muted small m-0">Nói thật, làm thật, đã hứa thì cố gắng giữ lời.</p>
+                </div>
+            </div>
+            <!-- Bạn có thể copy thêm các thẻ khác tương tự -->
+        </div>
+    </section>
+
+    <br><br><br>
+
+    <!-- ==========================================
+         PHẦN 4: KỸ NĂNG (SKILLS)
+    =========================================== -->
+    <section id="skills" class="pt-5 mb-5">
+        <h2 class="section-title">Kỹ năng</h2>
+        <div class="row g-4">
+            
+            <!-- Kỹ năng chuyên môn -->
+            <div class="col-lg-6">
+                <div class="b-card h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold m-0">Kỹ năng chuyên môn</h5>
+                        <i class="bi bi-code-slash text-muted"></i>
+                    </div>
+
+                    <!-- Lập trình -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between text-muted small mb-1">
+                            <span><i class="bi bi-code-slash me-2"></i>Lập trình (C#, ASP.NET)</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="custom-progress"><div class="custom-progress-bar" style="width: 67%;"></div></div>
+                    </div>
+
+                    <!-- Thiết kế -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between text-muted small mb-1">
+                            <span><i class="bi bi-palette me-2"></i>Thiết kế UI/UX</span>
+                            <span>72%</span>
+                        </div>
+                        <div class="custom-progress"><div class="custom-progress-bar" style="width: 70%;"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kỹ năng mềm -->
+            <div class="col-lg-6">
+                <div class="b-card h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold m-0">Kỹ năng mềm</h5>
+                        <i class="bi bi-heart text-muted"></i>
+                    </div>
+
+                    <!-- Giao tiếp -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between text-muted small mb-1">
+                            <span><i class="bi bi-chat-dots me-2"></i>Giao tiếp</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="custom-progress"><div class="custom-progress-bar" style="width: 80%;"></div></div>
+                    </div>
+
+                    <!-- Làm việc nhóm -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between text-muted small mb-1">
+                            <span><i class="bi bi-people me-2"></i>Làm việc nhóm</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="custom-progress"><div class="custom-progress-bar" style="width: 85%;"></div></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <!-- ==========================================
+         PHẦN 5: THÀNH TÍCH & DẤU ẤN (ACHIEVEMENTS)
+    =========================================== -->
+    <section id="achievements" class="pt-5 mb-5">
+        <h2 class="section-title">Thành tựu & Dự án</h2>
+        <div class="row g-5">
+            
+            <!-- Dự án 1: BAO Cinemas (Ảnh bên Trái - Chữ bên Phải) -->
+            <div class="col-12">
+                <div class="b-card p-0 overflow-hidden">
+                    <div class="row g-0 align-items-center">
+                        <!-- Cột chứa ảnh -->
+                        <div class="col-lg-6">
+                            <!-- Chèn link ảnh thật của bạn vào thuộc tính src="" bên dưới nhé -->
+                            <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1000&auto=format&fit=crop" 
+                                 class="img-fluid w-100" 
+                                 alt="BAO Cinemas" 
+                                 style="height: 100%; min-height: 350px; object-fit: cover;">
+                        </div>
+                        <!-- Cột chứa nội dung -->
+                        <div class="col-lg-6 p-4 p-md-5">
+                            <div class="d-flex align-items-center gap-3 mb-4">
+                                <div class="p-3" style="color: var(--accent-color);">
+                                    <img src="~/img/Logo.png" style="height: 70px; width: 90px;"/>
+                                </div>
+                                <h3 class="fw-bold m-0">Hệ thống B3Q Cinemas</h3>
+                            </div>
+                            <p class="text-muted mb-4" style="line-height: 1.8; font-size: 1.1rem;">
+                                Phát triển thành công hệ thống quản lý rạp chiếu phim. Xử lý mượt mà logic phân bổ lịch chiếu, phòng vé và xây dựng giao diện Dark Mode chuẩn điện ảnh.
+                            </p>
+                            <!-- Các tag kỹ năng -->
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge" style="background-color: #21262d; border: 1px solid #30363d; font-size: 0.85rem; padding: 8px 12px;">C#</span>
+                                <span class="badge" style="background-color: #21262d; border: 1px solid #30363d; font-size: 0.85rem; padding: 8px 12px;">ASP.NET Core</span>
+                                <span class="badge" style="background-color: #21262d; border: 1px solid #30363d; font-size: 0.85rem; padding: 8px 12px;">SQL Server</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dự án 2: Hibiki Yosakoi (Chữ bên Trái - Ảnh bên Phải đảo ngược) -->
+            <div class="col-12">
+                <div class="b-card p-0 overflow-hidden">
+                    <div class="row g-0 align-items-center flex-lg-row-reverse">
+                        <!-- Cột chứa ảnh -->
+                        <div class="col-lg-6">
+                            <!-- Chèn link ảnh thật của bạn vào thuộc tính src="" bên dưới nhé -->
+                            <img src="~/img/hibiki_poster.jpg" 
+                                 class="img-fluid w-100" 
+                                 alt="Hibiki Yosakoi" 
+                                 style="height: 100%; min-height: 350px; object-fit: cover;">
+                        </div>
+                        <!-- Cột chứa nội dung -->
+                        <div class="col-lg-6 p-4 p-md-5">
+                            <div class="d-flex align-items-center gap-3 mb-4">
+                                <div class="p-3 rounded-circle mb-4 flex-shrink-0 d-flex justify-content-center align-items-center" 
+                                     style="width: 90px; height: 90px; background-color: rgba(170, 0, 255, 0.1); color: #aa00ff;">
+                                    <i class="bi bi-palette fs-3"></i>
+                                </div>
+                                <h3 class="fw-bold m-0">Hibiki Yosakoi</h3>
+                            </div>
+                            <p class="text-muted mb-4" style="line-height: 1.8; font-size: 1.1rem;">
+                                Cháy hết mình cùng nghệ thuật múa Yosakoi. Vận dụng kỹ năng thiết kế để lên ý tưởng, dàn trang layout tạp chí và xử lý hình ảnh biểu diễn nghệ thuật.
+                            </p>
+                            <!-- Các tag kỹ năng -->
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge" style="background-color: #21262d; border: 1px solid #30363d; font-size: 0.85rem; padding: 8px 12px;">Dance</span>
+                                <span class="badge" style="background-color: #21262d; border: 1px solid #30363d; font-size: 0.85rem; padding: 8px 12px;">Japan Culture</span>
+                                <span class="badge" style="background-color: #21262d; border: 1px solid #30363d; font-size: 0.85rem; padding: 8px 12px;">Teamwork</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==========================================
+         PHẦN 6: SỞ THÍCH (HOBBIES)
+    =========================================== -->
+    <section id="hobbies" class="pt-5 mb-5">
+        <h2 class="section-title">Những điều mình yêu thích</h2>
+        
+        <!-- Dùng Grid chia làm 3 cột trên màn hình lớn, 2 cột trên tablet và 1 cột trên điện thoại -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            
+            <!-- Sở thích 1 -->
+            <div class="col">
+                <div class="b-card h-100 d-flex align-items-start gap-3" style="cursor: pointer;">
+                    <div class="p-2 rounded" style="background-color: rgba(88, 166, 255, 0.1); color: var(--accent-color);">
+                        <i class="bi bi-code-slash fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Công nghệ & Code</h6>
+                        <p class="text-muted small m-0">Nghiên cứu C#, vọc vạch các tool AI mới và cập nhật đồ chơi công nghệ.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sở thích 2 -->
+            <div class="col">
+                <div class="b-card h-100 d-flex align-items-start gap-3" style="cursor: pointer;">
+                    <div class="p-2 rounded" style="background-color: rgba(170, 0, 255, 0.1); color: #aa00ff;">
+                        <i class="bi bi-magic fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Coi phim</h6>
+                        <p class="text-muted small m-0">Chán chán là ngồi mò phim xem ehe. Góc khuất là ngồi mò phim mất hơn 1 tiếng mà không biết coi gì.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sở thích 3 -->
+            <div class="col">
+                <div class="b-card h-100 d-flex align-items-start gap-3" style="cursor: pointer;">
+                    <div class="p-2 rounded" style="background-color: rgba(255, 105, 180, 0.1); color: #ff69b4;">
+                        <i class="bi bi-suit-heart-fill fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Múa Yosakoi</h6>
+                        <p class="text-muted small m-0">Đam mê năng lượng bùng nổ, nụ cười tươi rói và những tiếng gõ Naruko giòn giã cùng team Hibiki.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sở thích 4 -->
+            <div class="col">
+                <div class="b-card h-100 d-flex align-items-start gap-3" style="cursor: pointer;">
+                    <div class="p-2 rounded" style="background-color: rgba(63, 185, 80, 0.1); color: #3fb950;">
+                        <i class="bi bi-translate fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Đọc truyện</h6>
+                        <p class="text-muted small m-0">Đào bới mọi nền tảng truyện tranh để đọc hoặc tham gia hội sách để rước truyện mình yêu thích</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sở thích 5 -->
+            <div class="col">
+                <div class="b-card h-100 d-flex align-items-start gap-3" style="cursor: pointer;">
+                    <div class="p-2 rounded" style="background-color: rgba(255, 170, 0, 0.1); color: #ffaa00;">
+                        <i class="bi bi-lightning-charge fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Nghe nhạc</h6>
+                        <p class="text-muted small m-0">Thực sự là bổ sung cho thời gian học tập, làm dự án, viết code là luôn phải có bài nhạc bên tai để tập trung nhất có thể</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sở thích 6 -->
+            <div class="col">
+                <div class="b-card h-100 d-flex align-items-start gap-3" style="cursor: pointer;">
+                    <div class="p-2 rounded" style="background-color: rgba(220, 53, 69, 0.1); color: #dc3545;">
+                        <i class="bi bi-controller fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Chơi game</h6>
+                        <p class="text-muted small m-0">Đã chơi rất nhiều thể loại game đặc biệt là game Gacha :)))</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==========================================
+         PHẦN 7: MẠNG XÃ HỘI (SOCIALS)
+    =========================================== -->
+    <section id="socials" class="pt-5 mb-5">
+        <h2 class="section-title">Kết nối với mình</h2>
+        
+        <div class="row g-4 align-items-stretch">
+            
+            <!-- Cột Trái: FACEBOOK -->
+            <div class="col-lg-5">
+                <!-- Thêm onclick để bấm cả khung thẻ cũng mở link tab mới -->
+                <div class="b-card h-100 d-flex flex-column justify-content-center align-items-center text-center p-5" 
+                     onclick="window.open('https://www.facebook.com/Berlin304', '_blank')"
+                     style="background: linear-gradient(145deg, #0b3975, #1877f2); border: none; cursor: pointer;">
+                    
+                    <!-- ĐÃ FIX LỖI BẦU DỤC: Ép width và height chuẩn 90px để luôn tròn xoe -->
+                    <div class="rounded-circle mb-4 flex-shrink-0 d-flex justify-content-center align-items-center" 
+                         style="width: 90px; height: 90px; background-color: rgba(255,255,255,0.1); backdrop-filter: blur(5px);">
+                        <i class="bi bi-facebook" style="font-size: 3.5rem; color: white;"></i>
+                    </div>
+                    
+                    <h3 class="fw-bold text-white mb-2">Facebook</h3>
+                    <p class="text-white-50 mb-4" style="font-size: 0.95rem; line-height: 1.6;">
+                        Nơi mình cập nhật linh tinh mỗi ngày, xàm xí với bạn bè và chia sẻ những khoảnh khắc đời thường.
+                    </p>
+                    
+                    <button class="btn btn-light rounded-pill px-4 py-2 fw-bold" style="color: #1877f2;">
+                        Theo dõi Quang Lùn
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cột Phải: Các nền tảng khác -->
+            <div class="col-lg-7">
+                <div class="row g-4 h-100">
+                    
+                    <!-- GitHub -->
+                    <div class="col-md-6">
+                        <!-- Đã gắn link Github -->
+                        <div class="b-card h-100 d-flex align-items-center gap-3" style="cursor: pointer;"
+                             onclick="window.open('https://github.com/itzryuka', '_blank')">
+                            <div class="p-3 rounded flex-shrink-0" style="background-color: rgba(255, 255, 255, 0.05);">
+                                <i class="bi bi-github fs-2 text-white"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-1 text-white">GitHub</h5>
+                                <p class="text-muted small m-0">Kho tàng lưu trữ đống code và các project hay ho.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WeChat (Bấm để hiện Popup) -->
+                    <div class="col-md-6">
+                        <!-- Gọi modal (popup) thay vì mở link -->
+                        <div class="b-card h-100 d-flex align-items-center gap-3" style="cursor: pointer;"
+                             data-bs-toggle="modal" data-bs-target="#wechatModal">
+                            <div class="p-3 rounded flex-shrink-0" style="background-color: rgba(7, 193, 96, 0.1);">
+                                <i class="bi bi-wechat fs-2" style="color: #07c160;"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-1" style="color: #e4e6eb;">WeChat</h5>
+                                <p class="text-muted small m-0">Theo dõi tình hình công nghệ bên bạn ;)))</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Discord (Bấm để Copy Username) -->
+                    <div class="col-md-6">
+                        <div class="b-card h-100 d-flex align-items-center gap-3" style="cursor: pointer;"
+                             onclick="navigator.clipboard.writeText('imma_berlin'); alert('Đã copy tên Discord: imma_berlin \nBạn hãy mở Discord dán tên để kết bạn nhé!');">
+                            
+                            <div class="p-3 rounded flex-shrink-0" style="background-color: rgba(88, 101, 242, 0.1);">
+                                <i class="bi bi-discord fs-2" style="color: #5865F2;"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-1" style="color: #e4e6eb;">Discord</h5>
+                                <p class="text-muted small m-0">Click để copy tên và gọi team chạy deadline thôi.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Steam -->
+                    <div class="col-md-6">
+                        <!-- Đã gắn link Steam -->
+                        <div class="b-card h-100 d-flex align-items-center gap-3" style="cursor: pointer;"
+                             onclick="window.open('https://steamcommunity.com/profiles/76561199128458187', '_blank')">
+                            <div class="p-3 rounded flex-shrink-0" style="background-color: rgba(102, 192, 244, 0.1);">
+                                <i class="bi bi-steam fs-2" style="color: #66c0f4;"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-1" style="color: #e4e6eb;">Steam</h5>
+                                <p class="text-muted small m-0">Game thủ chân chính, thêm bạn vào gánh tạ cùng nha.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         ĐOẠN CODE NÀY LÀ POPUP (MODAL) CỦA WECHAT
+         (Bạn có thể để nó nằm ngay dưới thẻ </section> trên)
+    =========================================== -->
+    <div class="modal fade" id="wechatModal" tabindex="-1" aria-labelledby="wechatModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content" style="background-color: #161b22; border: 1px solid #30363d; border-radius: 16px;">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <h5 class="modal-title fw-bold text-white" id="wechatModalLabel">Quét mã WeChat</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center pb-4 pt-4">
+                    <!-- Ảnh QR Code (Nhớ đổi đường dẫn src thành ảnh mã QR WeChat thật của bạn) -->
+                    <img src="~/img/QR_wechat.jpg" 
+                         alt="WeChat QR" 
+                         class="img-fluid rounded mb-3" 
+                         style="border: 8px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                    <p class="text-muted small mb-0">Mở ứng dụng WeChat và quét mã để kết bạn với mình nhé!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

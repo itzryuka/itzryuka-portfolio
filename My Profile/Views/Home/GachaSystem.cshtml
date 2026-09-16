@@ -1,0 +1,486 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gacha System Simulator</title>
+    <style>
+            :root {
+                --sss-color: #ff003c;
+                --ss-color: #ffaa00;
+                --s-color: #aa00ff;
+                --a-color: #00ddff;
+            }
+
+            body {
+                background-color: #111;
+                color: white;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-height: 100vh;
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+            /* Vùng hiển thị thông số */
+            .stats-board {
+                display: flex;
+                gap: 30px;
+                margin-bottom: 20px;
+                background: #222;
+                padding: 10px 30px;
+                border-radius: 12px;
+                border: 1px solid #444;
+            }
+
+            .stat-item {
+                font-size: 1.1rem;
+                font-weight: bold;
+            }
+
+            .pity-text {
+                color: #ffaa00;
+            }
+
+            .roll-text {
+                color: #00ddff;
+            }
+
+            /* Nút xem túi đồ */
+            .btn-inventory {
+                background: #28a745;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                font-size: 1rem;
+                font-weight: bold;
+                border-radius: 8px;
+                cursor: pointer;
+                margin-bottom: 20px;
+                transition: 0.2s;
+            }
+
+                .btn-inventory:hover {
+                    background: #218838;
+                    transform: translateY(-2px);
+                }
+
+            /* Khu vực hiển thị kết quả (Khóa cứng 100% không cho rớt hàng) */
+            .results {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 15px;
+                justify-content: center;
+                align-content: flex-start;
+                /* TOÁN HỌC: 5 thẻ (160px) + 4 khoảng cách (15px) + 2 lề (20px) = Vừa khít 900px.
+                           Ta dư dả thêm chút đỉnh thành 940px để thanh cuộn (nếu có) không ép thẻ rớt hàng */
+                width: 940px;
+                height: 520px; /* Khóa cứng chiều cao cho 2 hàng (440px thẻ + 15px gap + 40px lề = 495px, để 520px cho rộng rãi) */
+
+                max-width: 95vw; /* Tránh bị vỡ khung trên màn hình điện thoại nhỏ */
+                box-sizing: border-box; /* Ép viền và lề tính vào tổng kích thước */
+
+                overflow-y: auto;
+                margin-bottom: 30px;
+                padding: 20px;
+                background: #141414;
+                border: 2px dashed #333;
+                border-radius: 16px;
+            }
+
+                /* Thanh cuộn (Scrollbar) cho xịn */
+                .results::-webkit-scrollbar {
+                    width: 8px;
+                }
+
+                .results::-webkit-scrollbar-track {
+                    background: #111;
+                    border-radius: 4px;
+                }
+
+                .results::-webkit-scrollbar-thumb {
+                    background: #444;
+                    border-radius: 4px;
+                }
+
+                .results::-webkit-scrollbar-thumb:hover {
+                    background: var(--s-color);
+                }
+
+            .card {
+                width: 160px;
+                height: 220px;
+                background: #1a1a1a;
+                border-radius: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                padding: 10px;
+                animation: popIn 0.4s ease-out forwards;
+                opacity: 0;
+                transform: scale(0.5);
+            }
+
+            .rank-SSS {
+                border: 2px solid var(--sss-color);
+                box-shadow: 0 0 20px var(--sss-color) inset, 0 0 20px var(--sss-color);
+            }
+
+            .rank-SS {
+                border: 2px solid var(--ss-color);
+                box-shadow: 0 0 15px var(--ss-color) inset, 0 0 15px var(--ss-color);
+            }
+
+            .rank-S {
+                border: 2px solid var(--s-color);
+                box-shadow: 0 0 10px var(--s-color) inset, 0 0 10px var(--s-color);
+            }
+
+            .rank-A {
+                border: 2px solid var(--a-color);
+                box-shadow: 0 0 5px var(--a-color) inset;
+            }
+
+            .card h2 {
+                margin: 0;
+                font-size: 2.5rem;
+                text-shadow: 0 0 10px currentColor;
+            }
+
+            .rank-SSS h2, .text-SSS {
+                color: var(--sss-color);
+            }
+
+            .rank-SS h2, .text-SS {
+                color: var(--ss-color);
+            }
+
+            .rank-S h2, .text-S {
+                color: var(--s-color);
+            }
+
+            .rank-A h2, .text-A {
+                color: var(--a-color);
+            }
+
+            .card p {
+                margin-top: 10px;
+                font-size: 0.9rem;
+                color: #ddd;
+                font-weight: bold;
+            }
+
+            @@keyframes popIn {
+                0% {
+                    opacity: 0;
+                    transform: scale(0.5);
+                }
+
+                100% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+
+            /* Nút quay Gacha (Đưa xuống dưới) */
+            .buttons {
+                display: flex;
+                gap: 20px;
+                margin-top: auto; /* Đẩy xuống dưới cùng */
+                margin-bottom: 40px;
+            }
+
+            .btn-roll {
+                background: #222;
+                color: white;
+                border: 2px solid #444;
+                padding: 15px 30px;
+                font-size: 1.2rem;
+                font-weight: bold;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: 0.3s;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+            }
+
+                .btn-roll:hover:not(:disabled) {
+                    background: #333;
+                    transform: scale(1.05);
+                }
+
+                .btn-roll:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                    filter: grayscale(1);
+                }
+
+            .btn-x1 {
+                border-color: var(--s-color);
+                box-shadow: 0 0 10px rgba(170, 0, 255, 0.3);
+            }
+
+            .btn-x10 {
+                border-color: var(--ss-color);
+                box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
+            }
+
+            /* Giao diện Popup Túi Đồ */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.8);
+                justify-content: center;
+                align-items: center;
+            }
+
+            .modal-content {
+                background-color: #1a1a1a;
+                padding: 20px;
+                border: 1px solid #444;
+                border-radius: 12px;
+                width: 90%;
+                max-width: 500px;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid #333;
+                padding-bottom: 10px;
+                margin-bottom: 15px;
+            }
+
+            .close-btn {
+                font-size: 24px;
+                cursor: pointer;
+                color: #aaa;
+            }
+
+                .close-btn:hover {
+                    color: white;
+                }
+
+            .inventory-item {
+                display: flex;
+                justify-content: space-between;
+                padding: 12px;
+                background: #222;
+                margin-bottom: 8px;
+                border-radius: 6px;
+                border-left: 4px solid;
+            }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Gacha Simulator</h1>
+        <p>Tỉ lệ: SSS (0.1%) | SS (4.9%) | S (15%) | A (80%)</p>
+        <p style="color: #ffaa00; font-size: 0.9rem;">Bảo hiểm: Chắc chắn nhận hạng S trở lên mỗi 10 lượt quay.</p>
+    </div>
+
+    <!-- Bảng thông số -->
+    <div class="stats-board">
+        <div class="stat-item pity-text" id="pityDisplay">Bảo hiểm S: 0/10</div>
+        <div class="stat-item roll-text" id="totalRollDisplay">Tổng Roll: 0</div>
+    </div>
+    <!-- Nút mở túi đồ -->
+    <button class="btn-inventory" onclick="toggleInventory()">🎒 Xem Túi Đồ</button>
+
+    <!-- Khu vực hiện thẻ (ở giữa) -->
+    <div class="results" id="resultsContainer"></div>
+
+    <!-- Cụm nút bấm (đã đẩy xuống dưới và căn giữa) -->
+    <div class="buttons">
+        <button class="btn-roll btn-x1" id="btnRoll1" onclick="rollGacha(1)">Roll x1</button>
+        <button class="btn-roll btn-x10" id="btnRoll10" onclick="rollGacha(10)">Roll x10</button>
+    </div>
+
+    <!-- Popup Túi Đồ -->
+    <div id="inventoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0; color: #fff;">Túi Đồ Của Bạn</h2>
+                <span class="close-btn" onclick="toggleInventory()">&times;</span>
+            </div>
+            <div id="inventoryList">
+                <p style="text-align: center; color: #888;">Túi đồ đang trống. Hãy Gacha đi!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+            // 1. Dữ liệu kho đồ (Pool)
+            const poolSSS = Array.from({length: 10}, (_, i) => `Nhân Vật SSS - ${i+1}`);
+            const poolSS = Array.from({length: 15}, (_, i) => `Nhân Vật SS - ${i+1}`);
+            const poolS = Array.from({length: 5}, (_, i) => `Trang Bị S - ${i+1}`);
+            const poolA = Array.from({length: 10}, (_, i) => `Vật Phẩm A - ${i+1}`);
+
+            // Các biến toàn cục quản lý trạng thái
+            let pityCounter = 0;
+            let totalRolls = 0;
+            let isRolling = false; // Biến chống spam bấm liên tục
+            let inventory = {}; // Object lưu trữ túi đồ
+
+            function getRandomItem(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+                // Logic Quay 1 lần (Đã tính lại xác suất siêu chuẩn)
+            function singleRoll() {
+                pityCounter++;
+                totalRolls++;
+                let isPity = (pityCounter === 10);
+
+                // Random ra một số thập phân từ 0.000 đến 100.000
+                let rand = Math.random() * 100;
+                let resultRank = '';
+                let itemName = '';
+
+                if (isPity) {
+                    // NỔ BẢO HIỂM (Tuyệt đối không có A)
+                    // SSS vẫn là 0.1%, SS là 4.9%, còn lại 95% là S
+                    if (rand <= 0.1) {
+                        resultRank = 'SSS';
+                    }
+                    else if (rand <= 5.0) { // 0.1 + 4.9
+                        resultRank = 'SS';
+                    }
+                    else {
+                        resultRank = 'S';
+                    }
+                } else {
+                    // QUAY BÌNH THƯỜNG
+                    if (rand <= 0.1) {
+                        resultRank = 'SSS'; // 0.1%
+                    }
+                    else if (rand <= 5.0) { // 0.1% + 4.9% = 5.0%
+                        resultRank = 'SS';
+                    }
+                    else if (rand <= 20.0) { // 5.0% + 15.0% = 20.0%
+                        resultRank = 'S';
+                    }
+                    else {
+                        resultRank = 'A'; // 80% còn lại (Từ > 20.0 đến 100)
+                    }
+                }
+
+                // Gán tên vật phẩm
+                switch(resultRank) {
+                    case 'SSS': itemName = getRandomItem(poolSSS); break;
+                    case 'SS': itemName = getRandomItem(poolSS); break;
+                    case 'S': itemName = getRandomItem(poolS); break;
+                    case 'A': itemName = getRandomItem(poolA); break;
+                }
+
+                // Nếu ra S, SS, SSS thì Reset bộ đếm bảo hiểm về 0
+                if (['SSS', 'SS', 'S'].includes(resultRank)) {
+                    pityCounter = 0;
+                }
+
+                // Thêm vật phẩm vào túi đồ (cộng dồn số lượng)
+                if (inventory[itemName]) {
+                    inventory[itemName].count++;
+                } else {
+                    inventory[itemName] = { rank: resultRank, count: 1 };
+                }
+
+                return { rank: resultRank, name: itemName };
+            }
+
+            // Xử lý nút bấm Roll (Có chống Spam)
+            function rollGacha(times) {
+                if (isRolling) return; // Nếu đang cuộn thì chặn không cho bấm
+                isRolling = true;
+
+                // Khóa nút
+                document.getElementById('btnRoll1').disabled = true;
+                document.getElementById('btnRoll10').disabled = true;
+
+                const container = document.getElementById('resultsContainer');
+                container.innerHTML = '';
+
+                for (let i = 0; i < times; i++) {
+                    setTimeout(() => {
+                        let item = singleRoll();
+                        renderCard(item);
+
+                        // Cập nhật text hiển thị
+                        document.getElementById('pityDisplay').innerText = `Bảo hiểm S: ${pityCounter}/10`;
+                        document.getElementById('totalRollDisplay').innerText = `Tổng Roll: ${totalRolls}`;
+                    }, i * 150);
+                }
+
+                // Mở khóa nút sau khi thẻ cuối cùng hiện ra xong
+                setTimeout(() => {
+                    isRolling = false;
+                    document.getElementById('btnRoll1').disabled = false;
+                    document.getElementById('btnRoll10').disabled = false;
+                }, times * 150 + 100); // Cộng thêm 100ms phòng hờ
+            }
+
+            // In thẻ bài ra màn hình
+            function renderCard(item) {
+                const container = document.getElementById('resultsContainer');
+                const card = document.createElement('div');
+                card.className = `card rank-${item.rank}`;
+                card.innerHTML = `<h2>${item.rank}</h2><p>${item.name}</p>`;
+                container.appendChild(card);
+            }
+
+            // Bật/Tắt và hiển thị Popup Túi Đồ
+            function toggleInventory() {
+                const modal = document.getElementById('inventoryModal');
+                const invList = document.getElementById('inventoryList');
+
+                // Nếu đang ẩn thì mở lên và render dữ liệu
+                if (modal.style.display === "none" || modal.style.display === "") {
+                    modal.style.display = "flex";
+
+                    const items = Object.keys(inventory);
+                    if (items.length === 0) {
+                        invList.innerHTML = '<p style="text-align: center; color: #888;">Túi đồ đang trống. Hãy Gacha đi!</p>';
+                        return;
+                    }
+
+                    invList.innerHTML = '';
+                    // Render từng vật phẩm
+                    items.forEach(name => {
+                        const data = inventory[name];
+                        // Gắn màu vào đường viền bên trái cho dễ phân biệt rank
+                        let borderColor = data.rank === 'SSS' ? 'var(--sss-color)' :
+                                          data.rank === 'SS' ? 'var(--ss-color)' :
+                                          data.rank === 'S' ? 'var(--s-color)' : 'var(--a-color)';
+
+                        invList.innerHTML += `
+                            <div class="inventory-item" style="border-left-color: ${borderColor};">
+                                <span class="text-${data.rank}" style="font-weight: bold;">${name}</span>
+                                <span style="color: #fff;">x${data.count}</span>
+                            </div>
+                        `;
+                    });
+                } else {
+                    modal.style.display = "none";
+                }
+            }
+    </script>
+</body>
+</html>

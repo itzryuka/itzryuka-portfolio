@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="vi" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Portfolio</title>
+    
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        /* 1. Xử lý cuộn mượt và bù trừ khoảng cách Navbar */
+        html {
+            scroll-behavior: smooth !important;
+            scroll-padding-top: 75px; 
+        }
+
+        /* 2. Đẩy phần nội dung xuống để không bị Navbar đè (Padding này đẩy phần thân, không ảnh hưởng Navbar) */
+        body {
+            background-color: #0d1117; 
+            color: #f0f6fc;
+            padding-top: 75px; 
+        }
+
+        /* 3. Tùy chỉnh Navbar */
+        .fb-dark-nav {
+            background-color: #242526;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid #393a3b;
+            /* Đã gỡ position: sticky để dùng class fixed-top xịn hơn của Bootstrap */
+        }
+
+        .fb-dark-nav .navbar-brand { color: #e4e6eb !important; font-weight: 700; }
+        .fb-dark-nav .nav-link {
+            color: #b0b3b8 !important;
+            font-weight: 600; padding: 8px 15px; margin: 0 2px;
+            border-radius: 8px; transition: 0.2s ease-in-out;
+        }
+        .fb-dark-nav .nav-link:hover { background-color: #3a3b3c; color: #e4e6eb !important; }
+        
+        .btn-fb-secondary { background-color: #3a3b3c; color: #e4e6eb; border: none; border-radius: 6px; font-weight: 600; }
+        .btn-fb-secondary:hover { background-color: #4e4f50; color: white; }
+        
+        .btn-fb-primary { background-color: #2374e1; color: white; border: none; border-radius: 6px; font-weight: 600; }
+        .btn-fb-primary:hover { background-color: #3982e4; }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Đã thêm class fixed-top và w-100 để thanh Nav bám dính chặt trên đỉnh màn hình -->
+        <nav class="navbar navbar-expand-lg fb-dark-nav py-2 fixed-top w-100">
+            <div class="container-fluid px-4">
+                
+                <!-- Đổi href="#home" thành href="/" -->
+                <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                    <img src="~/img/header.jpg" 
+                         alt="Quang Lùn" 
+                         width="40" height="40" 
+                         class="rounded-circle" style="object-fit: cover;">
+                    <span>Quang Lùn</span>
+                </a>
+
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCenter">
+                    <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-center" id="navbarCenter">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#personality">Personality</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#achievements">Achievements</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#hobbies">Hobbies</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#socials">Socials</a></li>
+                    </ul>
+                </div>
+
+                <div class="d-none d-lg-flex gap-2">
+                    <a asp-controller="Home" asp-action="GachaSystem" class="btn btn-fb-primary px-3 py-2">
+                        Giải trí <i class="bi bi-controller ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <!-- Đảm bảo dán dưới cùng, ngay trên thẻ </body> -->
+    <!-- Dán đoạn này xuống dưới cùng, ngay trước thẻ </body> -->
+<script>
+    $(document).ready(function () {
+        $('.navbar-nav .nav-link').on('click', function (e) {
+            // Lấy ID của phần nội dung cần trỏ tới (VD: #about, #skills)
+            var target = $(this.getAttribute('href'));
+            
+            if (target.length) {
+                e.preventDefault(); // Chặn hành vi giật trang mặc định
+                
+                // Ép trang trượt mượt mà xuống, trừ hao 75px của thanh Navbar
+                $('html, body').stop().animate({
+                    scrollTop: target.offset().top - 75
+                }, 500); // Số 500 là tốc độ trượt (0.5 giây)
+            }
+        });
+    });
+</script>
+</body>
+</html>
